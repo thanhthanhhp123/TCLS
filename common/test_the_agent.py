@@ -14,7 +14,7 @@ def test_the_agent(agent, data_path, USE_CUDA, eval_num, display=False):
     rewards = []
     
     #specify the environment you wanna use; v0 means sample sub-cases randomly, and v1 only sample targeted sub-cases;
-    env = gym.make('Curriculum-Sokoban-v2', data_path = data_path)
+    env = gym.make('Boxoban-Val-v0')
 
     for i in range(eval_num):
 
