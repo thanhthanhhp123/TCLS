@@ -65,5 +65,5 @@ def train_the_agent(envs, num_envs, Variable, state_shape, actor_critic, optimiz
 
                 wandb_session.log({'solved_ratio': solved_rate})
                 print('solved ratio: {}'.format(solved_rate))
-
+        torch.save(actor_critic.state_dict(), 'model.pt')
     envs.close()
