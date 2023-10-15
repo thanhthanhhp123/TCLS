@@ -14,26 +14,22 @@ import torch.optim as optim
 import argparse
 import wandb
 import os
+import warnings
+warnings.filterwarnings('ignore')
 os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
 
 def train(args, wandb_session):
 
     if args.task == 's1t1fc_game2':
         fix = 'conv'
-        source_env_name = 'Boxoban-Train-v0'
-        taget_env_name = 'Boxoban-Test-v0'
+        source_env_name = 'Boxoban-Train-Basic'
+        taget_env_name = 'Boxoban-Test-Basic'
     else:
         fix = args.task[5]
-        source_env_name = 'Boxoban-Train-v0'
-        target_env_name = 'Boxoban-Train-v0'
+        source_env_name = 'Boxoban-Train-Basic'
+        target_env_name = 'Boxoban-Train-Basic'
 
-    source_task = args.task[1]
-    target_task = args.task[3]
-    if source_task == target_task:
-        target_task = str(target_task) + '_2'
-
-    source_task_map = args.map_file + str(source_task)
-    target_task_map = args.map_file + str(target_task)
+    target_task_map = 0
 
     #source task training
     def make_env():
@@ -63,7 +59,7 @@ def train(args, wandb_session):
 
 
     print('Pre-training the agent...')
-    train_the_agent(envs, args.num_envs, Variable, state_shape, actor_critic, optimizer, rollout, data_path=None, args=args, wandb_session=wandb_session) #train and save the model;
+    train_the_agent(envs, args.num_envs, Variable, state_shape, actor_critic, optimizer, rollout, data_path=target_task_map, args=args, wandb_session=wandb_session) #train and save the model;
 
     #target task training
     def make_env():
@@ -82,7 +78,7 @@ def train(args, wandb_session):
 if __name__ == "__main__":
     description = 'TLCLS'
     parser = argparse.ArgumentParser(description=description)
-    parser.add_argument('--num_steps', type=int, default=10000)
+    parser.add_argument('--num_steps', type=int, default=100000)
     parser.add_argument('--task', type=str, default='s1t1k1')
     parser.add_argument('--runs', type=int, default=3)
     parser.add_argument('--gamma', type=float, default=0.99)
